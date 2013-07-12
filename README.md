@@ -18,11 +18,14 @@ Nope
 
 ### Syslog client
 #### logging to a specified server
+```
   class { '::rsyslog_simple::client':
     logserver => 'custom-syslog-destination.example.com',
   }
+```
 
 #### Automagically log to syslog server
+```
   Rsyslog_simple::Exported_client <<| |>>
-
+```
   TODO: configurable tags?
