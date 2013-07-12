@@ -14,7 +14,9 @@ Nope
 
 ## Example usage
 ### Syslog server
+```
   class { '::rsyslog_simple::server': }
+```
 
 ### Syslog client
 #### logging to a specified server
