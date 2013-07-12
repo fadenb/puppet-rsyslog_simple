@@ -1,0 +1,50 @@
+# file is managed by puppet
+
+# An "In-Memory Queue" is created for remote logging.
+$WorkDirectory <%= scope.lookupvar('rsyslog_simple::client::config::spool_dir') -%>    # where to place spool files
+$ActionQueueFileName queue      # unique name prefix for spool files
+$ActionQueueMaxDiskSpace <%= scope.lookupvar('rsyslog_simple::client::config::spool_size') -%>     # spool space limit (use as much as possible)
+$ActionQueueSaveOnShutdown on   # save messages to disk on shutdown
+$ActionQueueType LinkedList     # run asynchronously
+$ActionResumeRetryCount -1      # infinety retries if host is down
+
+
+# Log to remote syslog server using <%= scope.lookupvar('rsyslog_simple::client::config::remote_type') %>
+<% if scope.lookupvar('rsyslog_simple::client::config::remote_type') == 'tcp' -%>
+  *.* @@<%= scope.lookupvar('rsyslog_simple::client::config::logserver') -%>:<%= scope.lookupvar('rsyslog_simple::client::config::port') -%>;RSYSLOG_ForwardFormat
+<% else -%>
+  *.* @<%= scope.lookupvar('rsyslog_simple::client::config::logserver') -%>:<%= scope.lookupvar('rsyslog_simple::client::config::port') -%>;RSYSLOG_ForwardFormat
+<% end -%>
+
+<% if scope.lookupvar('rsyslog_simple::client::config::log_local') -%>
+# We log locally, restore to default format
+$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
+
+# Log auth messages
+auth,authpriv.*                 /var/log/auth.log
+
+# First some standard log files.  Log by facility.
+*.*;auth,authpriv.none         -/var/log/syslog
+cron.*                          /var/log/cron.log
+daemon.*                       -/var/log/daemon.log
+kern.*                         -/var/log/kern.log
+#lpr.*                          -/var/log/lpr.log
+mail.*                         -/var/log/mail.log
+user.*                         -/var/log/user.log
+
+# Logging for the mail system.  Split it up so that
+# it is easy to write scripts to parse these files.
+mail.info                      -/var/log/mail.info
+mail.warn                      -/var/log/mail.warn
+mail.err                        /var/log/mail.err
+
+# Some "catch-all" log files.
+*.=debug;\
+       auth,authpriv.none;\
+       news.none;mail.none     -/var/log/debug
+*.=info;*.=notice;*.=warn;\
+       auth,authpriv.none;\
+       cron,daemon.none;\
+       mail,news.none          -/var/log/messages
+
+<% end -%>
