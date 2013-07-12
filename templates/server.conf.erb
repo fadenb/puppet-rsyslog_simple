@@ -1,0 +1,9 @@
+# file is managed by puppet
+
+<% if scope.lookupvar('rsyslog_simple::client::config::remote_type') == 'tcp' -%>
+  $ModLoad imtcp    # provides TCP remote logging support
+  $InputTCPServerRun 514
+<% else -%>
+  $ModLoad imudp    # provides UDP remote logging support
+  $UDPServerRun 514
+<% end -%>

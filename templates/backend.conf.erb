@@ -3,4 +3,4 @@
 ## Configuration file for rsyslog-<%= @backend %>
 
 $ModLoad om<%= @backend %>
-*.* :om<%= @backend -%>:<%= @server -%>,<%= @database -%>,<%= @username -%>,<%= @password %>
+*.* :om<%= @backend -%>:<%= @dbserver -%>,<%= @database -%>,<%= @username -%>,<%= @password %>

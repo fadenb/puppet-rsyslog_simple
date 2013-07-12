@@ -19,18 +19,16 @@ class rsyslog_simple::server (
   $username       = $rsyslog_simple::params::username,
   $password       = $rsyslog_simple::params::password,
 
+  $export_tags    = $rsyslog_simple::params::export_tags,
 ) inherits params {
   anchor{'rsyslog_simple::server::begin':}      ->
     notify{"fnord: ${rsyslog_d}":}              ->
     class {'rsyslog_simple::server::install':
       package_name  => $package_name,
       package_state => $package_state,
-
-      rsyslog_d     => $rsyslog_d,
-      rsyslog_user  => $rsyslog_user,
-      rsyslog_group => $rsyslog_group,
     }  ->
     class {'rsyslog_simple::server::config':
+      rsyslog_d     => $rsyslog_d,
       rsyslog_conf  => $rsyslog_conf,
       rsyslog_user  => $rsyslog_user,
       rsyslog_group => $rsyslog_group,
@@ -49,13 +47,13 @@ class rsyslog_simple::server (
       service_name   => $service_name,
       service_state  => $service_state,
       service_enable => $service_enable,
-      rsyslog_conf   => $rsyslog_conf,
+      rsyslog_d      => $rsyslog_d,
     }                                           ->
   anchor{'rsyslog_simple::server::end':}
 
   # export a minimally preconfigured client
   @@rsyslog_simple::exported_client { "syslog client exported from ${::fqdn}":
     logserver => $::fqdn,
-    tag       => "rsyslog_client-${::domain}",
+    tag       => $export_tags,
   }
 }

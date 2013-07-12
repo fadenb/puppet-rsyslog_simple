@@ -33,6 +33,8 @@ class rsyslog_simple::params {
       $log_local          = true
       $spool_dir          = '/var/spool/rsyslog/'
       $spool_size         = '1g'
+
+      $export_tags        = ['rsyslog', 'syslog', $::domain, ]
     }
     default: {
       fail("rsyslog_simple has no support for ${::osfamily} (yet)\nFeel free to submit a pull request :)")
