@@ -11,6 +11,11 @@ describe 'rsyslog_simple::client' do
       }
     end
 
-      it { should create_class('rsyslog_simple::client') }
+    it {
+      should create_class('rsyslog_simple::client')
+      should contain_package('rsyslog').with_ensure('latest')
+      should contain_file('/etc/rsyslog.d/').with_ensure('directory')
+      should contain_file('/etc/rsyslog.conf').with_ensure('file')
+    }
     end
 end
