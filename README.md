@@ -3,6 +3,9 @@ A simple rsyslog puppet module.
 
 Inspired by puppet-rsyslog by saz (https://github.com/saz/puppet-rsyslog)
 
+[![Build Status](https://travis-ci.org/fadenb/puppet-rsyslog_simple.png)](https://travis-ci.org/fadenb/puppet-rsyslog_simple)
+
+
 ## License
 Apache License, Version 2.0
 
